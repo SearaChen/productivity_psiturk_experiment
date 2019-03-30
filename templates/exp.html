@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+    
+    <head>
+        <title>jspsych + psiturk example - simple go/no-go reaction time test</title>
+        <script src="/static/lib/jquery-min.js" type="text/javascript"></script>
+        <script src="/static/lib/underscore-min.js" type="text/javascript"></script>
+        <script src="/static/lib/backbone-min.js" type="text/javascript"></script>
+        
+        <script src="/static/js/jspsych-6/jspsych.js" type="text/javascript"></script>
+        <script src="/static/js/jspsych-6/plugins/jspsych-text.js" type="text/javascript"></script>
+        <script src="/static/js/jspsych-6/plugins/jspsych-single-stim.js" type="text/javascript"></script>
+        <script src="/static/js/jspsych-6/plugins/jspsych-call-function.js" type="text/javascript"></script>
+
+        <script src="/static/js/jspsych-6/plugins/jspsych-html-keyboard-response.js"></script>
+        <script src="/static/js/jspsych-6/plugins/jspsych-audio-keyboard-response.js"></script>
+        <script src="/static/js/jspsych-6/plugins/jspsych-audio-button-response.js"></script>
+        <script src="/static/js/jspsych-6/plugins/jspsych-audio-slider-response.js"></script>
+        
+        <script type="text/javascript">
+            // These fields provided by the psiTurk Server
+            var uniqueId = "{{ uniqueId }}"; // a unique string identifying the worker/task
+            var adServerLoc = "{{ adServerLoc }}"; // the location of your ad (so you can send user back at end of experiment)
+            var mode = "{{ mode }}"; // is this running live, sandbox, or in debug mode?
+        </script>
+        
+        <!-- utils.js and psiturk.js provide the basic psiturk functionality -->
+        <script src="/static/js/utils.js" type="text/javascript"></script>
+        <script src="/static/js/psiturk.js" type="text/javascript"></script>
+        
+       <link href="/static/js/jspsych-6/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+    </head>
+    
+    <body>
+        <div id='jspsych-target'></div>
+    </body>
+    <script>
+        /* load psiturk */
+        var psiturk = new PsiTurk(uniqueId, adServerLoc, mode);
+
+        /* text blocks */
+        var welcome_page = {
+    type: "html-keyboard-response",
+    stimulus: "Welcome to the Seara's experiment. Press any key to begin, and be ready to be amazed.  "
+  };
+  var test_stimuli = [
+       { 
+        stimulus: '/static/mp3s/SEVENTEEN_Dont_Wanna_Cry.mp3'
+        },
+        { 
+        stimulus: "/static/mp3s/CelineDion1.mp3"
+        }
+    ];
+    var trials = {
+      stimulus: jsPsych.timelineVariable('stimulus'),
+      data: jsPsych.timelineVariable('data'),
+      type: "audio-button-response",
+      choices: ['1','2','3','4','5','replay'],
+      button_html: '<button class="jspsych-btn">%choice%</button>',
+      prompt: '<p>How acceptable is the music , rating from 1 to 5<\p> <p>press replay to hear it again</p>',
+      argin_vertical: '0px',
+      margin_horizontal : '8px',
+    }
+  var trial = {
+    type: "audio-button-response",
+    choices: ['1','2','3','4','5','replay'],
+      button_html: '<button class="jspsych-btn">%choice%</button>',
+      prompt: '<p>How acceptable is the music , rating from 1 to 5<\p> <p>press replay to hear it again</p>',
+      argin_vertical: '0px',
+      margin_horizontal : '8px',
+     //stimulus:'./mp3s/SEVENTEEN_Dont_Wanna_Cry.mp3',
+  }
+  var loop_node = {
+    timeline: [trials],
+    loop_function: function(data){
+      if("5" == data.values()[0].button_pressed){
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }
+  var test_procedure = {
+      timeline: [loop_node],
+      timeline_variables: test_stimuli,
+      repetitions: 1
+    }
+  var debrief_block = {
+    type: "html-keyboard-response",
+    stimulus: "<p>Press any key to exit the experiment. Thank you!</p>",
+    on_finish: function () { window.close()}
+  };
+  
+  // preload_all_audio
+  var audio = ['/static/mp3s/SEVENTEEN_Dont_Wanna_Cry.mp3', "/static/mp3s/CelineDion1.mp3"]
+  jsPsych.init({
+    timeline: [welcome_page,test_procedure,debrief_block],
+    preload_audio: audio
+  });
+        // ====================================================================================================
+      
+    </script>
+
+</html>
