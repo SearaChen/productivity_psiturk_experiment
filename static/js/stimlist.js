@@ -1,0 +1,1 @@
+var stimuli={"/static/mp3s/0.wav": "bˈeɪsdʒdʒd", "/static/mp3s/1.wav": "tɡˈʊtθdʒs", "/static/mp3s/2.wav": "bˈɛrkdʒdʒdʒ", "/static/mp3s/3.wav": "ɡrkzθt", "/static/mp3s/4.wav": "pˈʌmbtss", "/static/mp3s/5.wav": "bˈæmkzsz", "/static/mp3s/6.wav": "ˈirmtdd", "/static/mp3s/7.wav": "pˈɔɪdʒzθd", "/static/mp3s/8.wav": "bˈʌrɡsds", "/static/mp3s/9.wav": "pˈændʒθtz"}
